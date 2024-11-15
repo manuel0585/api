@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc 
+.env
+instance/
+base de datos.txt
+borrador.txt
+.DS_Store

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/chat.css">
+    <title>Chat - Estilo WhatsApp</title>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Lista de usuarios a la izquierda -->
+        <div class="user-list">
+            <h2 id="username-header"></h2>
+            <ul id="user-list">
+                {% for user in users %}
+                <li class="user-item" data-username="{{ user[0] }}">
+                    <img class="user-image" src="{{ user[1] }}" alt="Imagen de {{ user[0] }}" />
+                    <span class="user-name">{{ user[0] }}</span>
+                </li>
+                {% endfor %}
+            </ul>            
+        </div>
+
+        <!-- Área de chat a la derecha -->
+        <div id="chat-container">
+            <h2 id="chat-header">
+                <img id="chat-image" class="user-image" src="{{ image }}" alt="Imagen del usuario"/> 
+                <span id="username">{{ username }}</span>
+            </h2>
+            <div id="messages"></div>
+            <div class="input-container">
+                <input type="text" id="message-input" placeholder="Escribe un mensaje..." required>
+                <button id="send-button">Enviar</button>
+            </div>
+            <a href="/templates/login.html">
+                <button id="logout-button" class="logout">Cerrar Sesión</button>
+            </a>
+            {% if rol != 'Usuario' %}
+            <button id="change-profile-button" class="logout">Cambiar de perfil</button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Modal para cambiar de perfil -->
+    <div id="change-profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Cambiar de perfil</h2>
+            <ul id="change-user-list">
+                {% for user in users %}
+                <li class="change-user-item" data-username="{{ user[0] }}">{{ user[0] }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const userItems = document.querySelectorAll('.user-item');
+        const chatHeader = document.getElementById('chat-header');
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const changeProfileButton = document.getElementById('change-profile-button');
+        const changeProfileModal = document.getElementById('change-profile-modal');
+        const closeButton = document.querySelector('.close-button');
+
+        let selectedUser = '';
+
+        userItems.forEach(item => {
+            item.addEventListener('click', function() {
+                selectedUser = this.dataset.username;
+                const userImage = this.querySelector('.user-image').src;
+                chatHeader.innerHTML = '<img id="chat-image" class="user-image" src="' + userImage + '" alt="Imagen de ' + selectedUser + '"/> <span>' + selectedUser + '</span>';
+
+                loadMessages(selectedUser);
+            });
+        });
+
+        sendButton.addEventListener('click', function() {
+            const message = messageInput.value.trim();
+            if (message && selectedUser) {
+                fetch('/enviar-mensaje', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ receptor: selectedUser, mensaje: message })
+                }).then(() => {
+                    messageInput.value = '';
+                    loadMessages(selectedUser);  // Cargar mensajes actualizados
+                });
+            }
+        });
+
+        changeProfileButton.addEventListener('click', function() {
+            changeProfileModal.style.display = "block";
+        });
+
+        closeButton.addEventListener('click', function() {
+            changeProfileModal.style.display = "none";
+        });
+
+        // Cambiar de perfil al hacer clic en un usuario de la lista
+        const changeUserItems = document.querySelectorAll('.change-user-item');
+        changeUserItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const newUsername = this.dataset.username;
+
+                fetch('/cambiar-perfil', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ username: newUsername })
+                }).then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Actualizar sesión y cerrar modal
+                        sessionStorage.setItem('username', data.username);
+                        sessionStorage.setItem('image', data.image);
+                        window.location.reload(); // Recargar la página para actualizar la interfaz
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            });
+        });
+
+        // Cargar mensajes entre el usuario actual y el seleccionado
+        function loadMessages(username) {
+            fetch('/chat-personal/' + username)
+            .then(response => response.json())
+            .then(data => {
+                messagesDiv.innerHTML = '';  // Limpiar mensajes anteriores
+                const mensajes = data.mensajes.split('\n');  // Separar por saltos de línea
+                mensajes.forEach((msg) => {
+                    const [emisor, mensaje] = msg.split(': ');  // Separar emisor y mensaje
+                    const messageElement = document.createElement('div');
+                    messageElement.classList.add('message');
+                    messageElement.textContent = mensaje.trim();
+            
+                    if (emisor === '{{ username }}') {  // Si el mensaje es del usuario actual
+                        messageElement.classList.add('sent');
+                    } else {  // Si el mensaje es del otro usuario
+                        messageElement.classList.add('received');
+                    }
+                    messagesDiv.appendChild(messageElement);  // Agregar el mensaje al contenedor
+                });
+            });
+        }
+
+        // Actualizar mensajes cada 2 segundos
+        setInterval(() => {
+            if (selectedUser) {
+                loadMessages(selectedUser);
+            }
+        }, 2000);
+    </script>
+
+    
+</body>
+</html>

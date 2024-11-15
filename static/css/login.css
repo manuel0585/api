@@ -1,0 +1,83 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Serif', serif;
+    background-color: #525252;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background-color: #4a4a4a;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    width: 90%;  /* Cambiar a 90% para móvil */
+    max-width: 400px; /* Max width para escritorio */
+    text-align: left;
+}
+
+h2 {
+    color: #f0f0f0;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #29ad29;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #8fb177;
+}
+
+input[type="submit"] {
+    background-color: #29ad29;
+    color: white;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: white;
+    color: #29ad29;
+    border: 1px solid #29ad29;
+}
+
+p {
+    color: white;
+    text-align: center;
+}
+
+a {
+    color: #29ad29;
+}
+
+/* Media queries para pantallas pequeñas */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;  /* Cambia a 100% para móviles */
+    }
+}
