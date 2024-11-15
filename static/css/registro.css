@@ -4,7 +4,7 @@
 
 body {
     font-family: 'Serif', serif;
-    background-color: #525252;
+    background-color: #d9fdd3; /* Color de fondo similar a WhatsApp */
     margin: 0;
     padding: 0;
 }
@@ -14,7 +14,7 @@ body {
     max-width: 400px;
     margin: auto;
     padding: 30px;
-    background: #4a4a4a;
+    background: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     transition: all 0.3s ease;
@@ -23,13 +23,14 @@ body {
 h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #f0f0f0;
+    color: #25D366; /* Color verde WhatsApp */
+    font-weight: bold;
 }
 
 label {
     display: block;
     margin: 10px 0 5px;
-    color: #29ad29;
+    color: #25D366; /* Color verde WhatsApp */
 }
 
 input[type="email"],
@@ -49,12 +50,12 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 input[type="text"]:focus,
 select:focus {
-    border: 1px solid #8fb177;
+    border: 1px solid #25D366;
     outline: none;
 }
 
 input[type="submit"] {
-    background-color: #29ad29;
+    background-color: #25D366;
     color: white;
     padding: 12px;
     border: none;
@@ -67,8 +68,8 @@ input[type="submit"] {
 
 input[type="submit"]:hover {
     background-color: white;
-    color: #29ad29;
-    border: 1px solid #29ad29;
+    color: #25D366;
+    border: 1px solid #25D366;
 }
 
 #regresar-button {
@@ -85,7 +86,7 @@ input[type="submit"]:hover {
 }
 
 #regresar-button:hover {
-    background-color: rgb(255, 255, 255);
+    background-color: white;
     color: red;
     border: 1px solid red;
 }
