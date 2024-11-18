@@ -29,6 +29,13 @@ body {
     max-width: 400px; /* Max width para pantallas grandes */
     text-align: center;
 }
+
+h1 {
+    color: #075e54;
+    font-weight: bold;
+    font-size: 48px;
+}
+
 h2 {
     color: #075e54; /* Verde oscuro similar al de WhatsApp */
     font-size: 24px;
